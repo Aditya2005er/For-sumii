@@ -1,203 +1,204 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="theme-color" content="#02020a">
-<title>Susmitha — My Moon</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>For Susmitha</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,500&display=swap" rel="stylesheet">
 <style>
-html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#02020a}
-body{touch-action:none}
-canvas{position:fixed;inset:0;width:100%;height:100%;display:block}
-#name,#caption{position:fixed;left:0;right:0;text-align:center;color:#fff;pointer-events:none;opacity:0;transition:opacity .7s ease;font-family:Georgia,"Times New Roman",serif}
-#name{top:29%;font-size:clamp(42px,14vw,82px);font-weight:700;letter-spacing:2px;text-shadow:0 0 12px rgba(255,220,245,.9),0 0 30px rgba(255,160,220,.45)}
-#heart{position:fixed;left:0;right:0;top:54%;text-align:center;color:#ffb1d5;font-size:clamp(42px,12vw,70px);opacity:0;transition:opacity .7s ease;text-shadow:0 0 18px rgba(255,100,190,.8);pointer-events:none}
-#caption{top:70%;font-size:clamp(17px,5vw,25px);letter-spacing:5px;text-shadow:0 0 14px #fff}
-#hint{position:fixed;top:18px;left:0;right:0;text-align:center;color:#ffffff66;font:10px Georgia,serif;letter-spacing:3px;pointer-events:none}
+:root{--abyss:#04121f;--deep:#0a2a43;--teal:#1d6f7a;--foam:#dff4f1;--moon:#f3d9a4;--coral:#ff9e8a}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{font-family:"Cormorant Garamond",Georgia,serif;color:var(--foam);background:linear-gradient(180deg,var(--abyss) 0%,var(--deep) 62%,#0d3b57 100%);overflow:hidden;cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none}
+#stars{position:fixed;inset:0 0 40% 0}
+.star{position:absolute;width:2px;height:2px;border-radius:50%;background:var(--foam);opacity:.6;animation:tw 4s ease-in-out infinite}
+@keyframes tw{50%{opacity:.1}}
+.moon{position:fixed;top:7vh;right:12vw;width:min(18vw,110px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff6df,var(--moon));box-shadow:0 0 60px 20px rgba(243,217,164,.35)}
+.bird{position:fixed;top:14vh;left:0;width:64px;color:var(--foam);animation:fly 16s cubic-bezier(.3,.6,.4,1) forwards;transform:translateX(-80px)}
+.bird svg{width:100%;animation:bob 3s ease-in-out infinite}
+.wing{transform-origin:32px 20px;animation:flap .9s ease-in-out infinite}
+@keyframes flap{50%{transform:scaleY(-.5)}}
+@keyframes bob{50%{transform:translateY(-8px)}}
+@keyframes fly{to{transform:translateX(calc(100vw - min(18vw,110px) - 12vw - 100px))}}
+main{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 8vw 14vh;text-align:center}
+h1{font-weight:400;font-style:italic;font-size:clamp(1.1rem,3.4vw,1.5rem);color:var(--moon);margin-bottom:2.2rem;letter-spacing:.02em}
+#line{font-weight:500;font-size:clamp(1.7rem,6.2vw,3.1rem);line-height:1.3;max-width:20em;text-wrap:balance;text-shadow:0 2px 24px rgba(4,18,31,.7);transition:opacity .4s ease,transform .4s ease}
+#line.out{opacity:0;transform:translateY(10px)}
+#hint{position:fixed;bottom:22vh;left:0;right:0;text-align:center;font-style:italic;color:var(--foam);opacity:.6;font-size:1.05rem}
+.waves{position:fixed;left:0;right:0;bottom:0;height:26vh;pointer-events:none}
+.waves svg{position:absolute;bottom:0;left:0;width:200%;height:100%;animation:drift 14s linear infinite}
+.waves svg:nth-child(2){animation-duration:22s;animation-direction:reverse;bottom:-2vh}
+.waves svg:nth-child(3){animation-duration:30s;bottom:-5vh}
+@keyframes drift{to{transform:translateX(-50%)}}
+.rip{position:fixed;width:20px;height:20px;margin:-10px;border:2px solid var(--foam);border-radius:50%;pointer-events:none;animation:rip 1.2s ease-out forwards}
+@keyframes rip{to{transform:scale(9);opacity:0}}
+.word{position:fixed;pointer-events:none;font-style:italic;font-size:1.3rem;color:var(--coral);animation:up 3.2s ease-out forwards;text-shadow:0 0 12px rgba(255,158,138,.5)}
+@keyframes up{from{opacity:0;transform:translateY(0)}15%{opacity:1}to{opacity:0;transform:translateY(-38vh)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}.bird{transform:translateX(30vw)}}
 </style>
 </head>
 <body>
-<canvas id="c"></canvas>
-<div id="name">Susmitha</div>
-<div id="heart">♥</div>
-<div id="caption">Somehow, every star leads me back to you.</div>
-<div id="hint">TAP TO CHANGE • SWIPE</div>
+<div id="stars"></div>
+<div class="moon"></div>
+<div class="bird" aria-hidden="true">
+  <svg viewBox="0 0 64 40" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20 22c8 2 18 2 26-4"/>
+    <g class="wing"><path d="M32 20C26 8 16 4 6 6c8 2 14 8 18 16"/></g>
+    <path d="M46 18l8-2-6 5"/>
+  </svg>
+</div>
+
+<main>
+  <h1 id="title"></h1>
+  <p id="line" aria-live="polite"></p>
+</main>
+<p id="hint">tap anywhere for more of what I see in you</p>
+
+<div class="waves" aria-hidden="true">
+  <svg viewBox="0 0 1200 120" preserveAspectRatio="none"><path fill="#1d6f7a" fill-opacity=".45" d="M0 50Q150 10 300 50T600 50T900 50T1200 50V120H0Z"/></svg>
+  <svg viewBox="0 0 1200 120" preserveAspectRatio="none"><path fill="#0f4c63" fill-opacity=".75" d="M0 60Q150 20 300 60T600 60T900 60T1200 60V120H0Z"/></svg>
+  <svg viewBox="0 0 1200 120" preserveAspectRatio="none"><path fill="#04121f" fill-opacity=".9" d="M0 70Q150 35 300 70T600 70T900 70T1200 70V120H0Z"/></svg>
+</div>
 
 <script>
-(function(){
-"use strict";
+const NAME = "Susmitha";   // change this if you want a nickname
+const FROM = "yours";      // sign-off, e.g. your name
 
-var canvas=document.getElementById("c");
-var ctx=canvas.getContext("2d");
-var nameEl=document.getElementById("name");
-var heartEl=document.getElementById("heart");
-var captionEl=document.getElementById("caption");
-var hint=document.getElementById("hint");
+const lines = [
+  "You are the most beautiful thing I have ever seen, and I still can't look away.",
+  "Your smile is my favourite place in the whole world.",
+  "There is no one else like you. You are completely, wonderfully unique.",
+  "You are pretty in a way that makes the whole day feel softer.",
+  "Every time I fly towards you, I find home.",
+  "You are the best part of every single day I have.",
+  "I love you more than the sea has waves, and the sea never runs out.",
+  "Your eyes hold more light than the moon over the water.",
+  "You are not just beautiful. You are beautiful everywhere: your heart, your laugh, your way of being you.",
+  "Being loved by you is the luckiest thing that has ever happened to me.",
+  "You make ordinary moments feel like something I'll remember forever.",
+  "The world is brighter because you are in it.",
+  "You are gentle, strong, and shining, all at once.",
+  "If I could pick one person across every sea, I would still swim to you.",
+  "You are my calm and my favourite adventure.",
+  "Nobody smiles like you do. I could go my whole life and never see another one like it.",
+  "You are the most precious person I know.",
+  "Your voice is my favourite sound, even more than the waves.",
+  "You deserve every good thing the world has, and I want to give you all I can.",
+  "You are the reason my heart feels so full.",
+  "Even on my worst days, thinking of you turns everything around.",
+  "You are lovely in the morning, lovely at night, and lovely every hour in between.",
+  "Out of everything in this whole world, you are what I'm most grateful for.",
+  "You are a miracle I get to call mine.",
+  "Your kindness is as deep as the ocean, and I never reach the bottom of it.",
+  "You are stunning, and the best part is that you don't even try.",
+  "I would cross any sky and any sea just to see you smile.",
+  "You are the most special person in my life, today and always.",
+  "Loving you is the easiest and best thing I have ever done.",
+  "You glow, and I am lucky enough to stand in your light.",
+  "You are my sunrise, my moonlight, and everything in between.",
+  "There is a little bit of magic in the way you exist.",
+  "My heart goes quiet and happy the moment I think of you.",
+  "You are rare, like a pearl, and I am so proud to love you.",
+  "I'm so proud of you, for who you are and everything you do.",
+  "You make me want to be better, simply by being you.",
+  "You are the sweetest person I know, with the prettiest heart.",
+  "You are my favourite hello and my hardest goodbye.",
+  "Every wave that touches the shore reminds me of how I keep coming back to you.",
+  "You are enough. You are more than enough. You are everything.",
+  "I fall for you a little more every day, and I hope you never stop surprising me.",
+  "You are the most beautiful soul I have ever met.",
+  "Wherever you are is where I want to be.",
+  "You make my world feel like the sea at sunset: warm, golden, and endless.",
+  "You are beautiful today, and you were yesterday, and you will be tomorrow.",
+  "There is no one in this world who can make me smile like you do.",
+  "You are my peace, my joy, and my favourite person.",
+  "When the world is loud, your name is the quiet I look for.",
+  "You are strong, graceful, and so very loved.",
+  "You are the best thing that has ever found me.",
+  "You light up every room, and every heart, you walk into.",
+  "My love for you is deeper than any ocean and older than any star.",
+  "You are my dream, and the best part is that I'm awake.",
+  "Thank you for being exactly who you are. It is the most beautiful thing.",
+  "You are adorable, brilliant, and impossible not to love.",
+  "I will keep flying towards you, no matter how far the shore.",
+  "You are the one my heart chose, and it was right.",
+  "Your laugh is the sweetest music, and I would listen to it forever.",
+  "You are my today, my tomorrow, and all my days after that.",
+  "You are the kind of beautiful that poems are written about.",
+  "I love you. I love you. I love you. Always and completely."
+];
 
-var W=0,H=0,dpr=1;
-var particles=[];
-var stars=[];
-var scene=0;
-var previous=0;
-var changed=0;
-var downX=0,downY=0;
+const words = ["beautiful","pretty","amazing","unique","precious","radiant","lovely","my best","gorgeous","magical","sweet","special","my love","shining","priceless","graceful","my home","stunning","one of a kind","my heart"];
 
-var COUNT=260;
-var TAU=Math.PI*2;
+const $ = id => document.getElementById(id);
+const line = $("line");
 
-function resize(){
-  W=window.innerWidth;
-  H=window.innerHeight;
-  dpr=Math.min(window.devicePixelRatio||1,1.5);
-  canvas.width=Math.floor(W*dpr);
-  canvas.height=Math.floor(H*dpr);
-  ctx.setTransform(dpr,0,0,dpr,0,0);
-  makeStars();
-  makeTargets();
+$("title").textContent = "For " + NAME + ", from the sea of my heart";
+
+// Stars
+const stars = $("stars");
+for (let i = 0; i < 70; i++) {
+  const s = document.createElement("span");
+  s.className = "star";
+  s.style.left = Math.random() * 100 + "%";
+  s.style.top = Math.random() * 100 + "%";
+  s.style.animationDelay = Math.random() * 4 + "s";
+  stars.appendChild(s);
 }
 
-function makeStars(){
-  stars=[];
-  var n=Math.min(55,Math.floor(W*H/11000));
-  for(var i=0;i<n;i++){
-    stars.push({
-      x:Math.random()*W,
-      y:Math.random()*H,
-      r:.4+Math.random()*.8,
-      a:.25+Math.random()*.5
-    });
-  }
+// Today's line: the same all day, new tomorrow
+function dayIndex() {
+  const d = new Date();
+  const key = d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
+  return key % lines.length;
 }
 
-function scatter(){
-  return {x:Math.random()*W,y:Math.random()*H};
-}
+let current = dayIndex();
+line.textContent = lines[current];
 
-function galaxy(){
-  var a=Math.random()*TAU;
-  var r=Math.sqrt(Math.random())*Math.min(W,H)*.40;
-  return {
-    x:W*.5+Math.cos(a+r*.012)*r,
-    y:H*.45+Math.sin(a+r*.012)*r*.65
-  };
-}
-
-function moon(){
-  var cx=W*.5,cy=H*.42,R=Math.min(W,H)*.25;
-  for(var i=0;i<60;i++){
-    var x=cx+(Math.random()*2-1)*R;
-    var y=cy+(Math.random()*2-1)*R;
-    if(Math.hypot(x-cx,y-cy)<=R){
-      var ox=cx+R*.42,oy=cy-R*.03;
-      if(Math.hypot(x-ox,y-oy)>R*.87)return{x:x,y:y};
+// Tap: a new line every time, without repeating until all have been seen
+let queue = [];
+function nextIndex() {
+  if (!queue.length) {
+    queue = lines.map((_, i) => i).filter(i => i !== current);
+    for (let i = queue.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [queue[i], queue[j]] = [queue[j], queue[i]];
     }
   }
-  return{x:cx,y:cy};
+  return queue.pop();
 }
 
-function makeTargets(){
-  if(!particles.length){
-    for(var i=0;i<COUNT;i++){
-      particles.push({
-        scatter:scatter(),
-        galaxy:galaxy(),
-        moon:moon(),
-        x:0,y:0,
-        alpha:.35+Math.random()*.55,
-        phase:Math.random()*TAU
-      });
-    }
-  }else{
-    for(var j=0;j<particles.length;j++){
-      particles[j].scatter=particles[j].scatter||scatter();
-      particles[j].galaxy=galaxy();
-      particles[j].moon=moon();
-    }
+function spawn(x, y) {
+  const r = document.createElement("div");
+  r.className = "rip";
+  r.style.left = x + "px";
+  r.style.top = y + "px";
+  document.body.appendChild(r);
+  setTimeout(() => r.remove(), 1300);
+  for (let i = 0; i < 5; i++) {
+    const w = document.createElement("div");
+    w.className = "word";
+    w.textContent = words[Math.floor(Math.random() * words.length)];
+    w.style.left = Math.max(10, Math.min(window.innerWidth - 110, x + (Math.random() - .5) * 220)) + "px";
+    w.style.top = Math.min(window.innerHeight - 60, y + Math.random() * 40) + "px";
+    w.style.animationDelay = i * 0.15 + "s";
+    document.body.appendChild(w);
+    setTimeout(() => w.remove(), 3600);
   }
 }
 
-function target(p,s){
-  if(s===0)return p.scatter;
-  if(s===1)return p.galaxy;
-  if(s===2)return p.moon;
-  return {x:W/2,y:H/2};
-}
-
-function ease(t){
-  return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
-}
-
-function change(n){
-  previous=scene;
-  scene=(n+4)%4;
-  changed=performance.now();
-
-  var finalScene=scene===3;
-  nameEl.style.opacity=finalScene?"1":"0";
-  heartEl.style.opacity=finalScene?"1":"0";
-  captionEl.style.opacity=finalScene?"1":"0";
-  hint.style.opacity=finalScene?"0":"1";
-}
-
-function draw(now){
-  ctx.fillStyle="#02020a";
-  ctx.fillRect(0,0,W,H);
-
-  var g=ctx.createRadialGradient(W*.5,H*.45,0,W*.5,H*.45,Math.max(W,H)*.65);
-  g.addColorStop(0,"rgba(65,40,90,.16)");
-  g.addColorStop(1,"rgba(0,0,0,0)");
-  ctx.fillStyle=g;
-  ctx.fillRect(0,0,W,H);
-
-  for(var i=0;i<stars.length;i++){
-    var s=stars[i];
-    ctx.globalAlpha=s.a;
-    ctx.fillStyle="#fff";
-    ctx.fillRect(s.x,s.y,s.r,s.r);
-  }
-  ctx.globalAlpha=1;
-
-  var t=Math.min(1,(now-changed)/900);
-  var e=ease(t);
-
-  ctx.font="8px Georgia,serif";
-  ctx.textAlign="center";
-  ctx.textBaseline="middle";
-
-  for(var k=0;k<particles.length;k++){
-    var p=particles[k];
-    var a=target(p,previous);
-    var b=target(p,scene);
-    var x=a.x+(b.x-a.x)*e;
-    var y=a.y+(b.y-a.y)*e;
-    ctx.fillStyle="rgba(255,235,250,"+p.alpha+")";
-    ctx.fillText("Susmitha",x,y);
-  }
-
-  requestAnimationFrame(draw);
-}
-
-canvas.addEventListener("pointerdown",function(e){
-  downX=e.clientX;
-  downY=e.clientY;
+document.addEventListener("pointerdown", e => {
+  spawn(e.clientX, e.clientY);
+  current = nextIndex();
+  line.classList.add("out");
+  setTimeout(() => {
+    line.textContent = lines[current];
+    line.classList.remove("out");
+  }, 400);
+  $("hint").style.opacity = 0;
 });
-
-canvas.addEventListener("pointerup",function(e){
-  var dx=e.clientX-downX;
-  var dy=e.clientY-downY;
-  if(Math.abs(dx)>45 && Math.abs(dx)>Math.abs(dy)){
-    change(scene+(dx<0?1:-1));
-  }else{
-    change(scene+1);
-  }
-});
-
-window.addEventListener("resize",resize);
-
-resize();
-changed=performance.now()-1000;
-requestAnimationFrame(draw);
-})();
 </script>
 </body>
 </html>
